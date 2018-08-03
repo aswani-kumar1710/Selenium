@@ -1,0 +1,95 @@
+package com.cg.sel.seltest3;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.logging.Logger;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
+public class GoogleTest {
+	
+	
+	static WebDriver driver;
+	static Logger logger = Logger.getLogger(GoogleTest.class.getName());
+	
+	@Before
+	public void initialization() throws Throwable
+	{
+		
+		System.setProperty("webdriver.chrome.driver", "D:\\JENKINS\\Drivers\\chromedriver.exe");
+		driver = new ChromeDriver();
+		driver.manage().window().maximize();
+	}
+	
+	@Test
+	public void gitHubTest() {
+		
+		try {
+			given();
+			when();
+			then();
+			
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+		@Given("^I have an account$")
+		public static void given() throws Throwable {
+		   
+			driver.get("https://github.com/login");
+			Thread.sleep(2000);
+		}
+
+		@When("^I enter valid Username and valid password$")
+		public static void when() throws Throwable {
+		   
+			InputStream ExcelFileToRead = new FileInputStream("D:\\Test.xls");
+			HSSFWorkbook wb = new HSSFWorkbook(ExcelFileToRead);
+
+			HSSFSheet sheet = wb.getSheetAt(0);
+			
+			Iterator rows = sheet.rowIterator();
+			
+			for (int row = 1; row <=sheet.getLastRowNum(); row++) {
+
+	          String username = sheet.getRow(row).getCell(1).getStringCellValue();
+	          String password = sheet.getRow(row).getCell(2).getStringCellValue();
+	          driver.findElement(By.name("login")).sendKeys(username);
+	          driver.findElement(By.name("password")).sendKeys(password);
+	          then();
+	          driver.findElement(By.name("login")).clear();
+	          
+	        }
+			
+				
+			//driver.findElement(By.name("login")).sendKeys("Udaybudireddy");
+			//driver.findElement(By.name("password")).sendKeys("AMMAnanna@13");
+		}
+
+		@Then("^it should open my account$")
+		public static void then() throws Throwable {
+		   
+			driver.findElement(By.name("commit")).click();
+		}
+		
+		
+		
+
+}
